@@ -12,10 +12,8 @@ import {
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  useAuthActions,
-  useAuthState,
-} from "../features/auth/AuthContextProvider";
+import { useAppSelector, useAppDispatch } from "../store/hook";
+import { signup } from "../features/auth/AuthSlice";
 
 type FormData = {
   email: string;
@@ -23,8 +21,8 @@ type FormData = {
 };
 
 export default function SignupForm() {
-  const { signupError, isSigningUp } = useAuthState();
-  const { signup } = useAuthActions();
+  const dispatch = useAppDispatch();
+  const { signupError, isSigningUp } = useAppSelector((state) => state.auth);
 
   const {
     handleSubmit,
@@ -33,7 +31,8 @@ export default function SignupForm() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit((data) => {
-    signup(data.email, data.password);
+    signup(data);
+    dispatch(signup(data));
   });
 
   return (
@@ -64,8 +63,8 @@ export default function SignupForm() {
             minLength: { value: 5, message: "Min length 5." },
           })}
         />
-        {errors["password"] && (
-          <FormErrorMessage> {errors["password"]["message"]}</FormErrorMessage>
+        {errors.password && (
+          <FormErrorMessage> {errors.password.message}</FormErrorMessage>
         )}
       </FormControl>
       <Text color="red.700" fontSize="sm">

@@ -5,7 +5,7 @@ const paths = {
   vaccine: "/vaccine",
   createVaccine: "/vaccine/create",
 
-  updateVaccine(id: string) {
+  updateVaccine(id: number) {
     return `/vaccine/edit/${id}`;
   },
 };

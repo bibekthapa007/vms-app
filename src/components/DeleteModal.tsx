@@ -10,13 +10,18 @@ import {
 } from "@chakra-ui/modal";
 
 type DeleteModalProps = {
-  vaccineId?: string;
   isOpen: boolean;
   onOpen?: () => void;
   onClose: () => void;
+  handleDelete: (vaccine_id: number) => void;
 };
 
-function DeleteModal({ vaccineId, isOpen, onOpen, onClose }: DeleteModalProps) {
+function DeleteModal({
+  isOpen,
+  onOpen,
+  onClose,
+  handleDelete,
+}: DeleteModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -31,7 +36,14 @@ function DeleteModal({ vaccineId, isOpen, onOpen, onClose }: DeleteModalProps) {
           <Button mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="red" mr={3} onClick={onClose}>
+          <Button
+            colorScheme="red"
+            mr={3}
+            onClick={(e) => {
+              e.preventDefault();
+              // handleDelete(vaccineId);
+            }}
+          >
             Delete
           </Button>
         </ModalFooter>

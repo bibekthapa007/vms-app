@@ -9,17 +9,19 @@ import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import Link from "../components/Link";
 
 import paths from "../paths";
+import { Vaccine } from "../types/vaccine";
 
 type VaccineCardProps = {
   onOpen: (e: any) => void;
+  vaccine: Vaccine;
 };
 
-function VaccineCard({ onOpen }: VaccineCardProps) {
+function VaccineCard({ onOpen, vaccine }: VaccineCardProps) {
   const [isMandatory, setMandatory] = useState(false);
   return (
     <Link
       passHref
-      to={paths.updateVaccine("vaccine_id")}
+      to={paths.updateVaccine(vaccine.id)}
       borderBottom="1px solid"
       borderColor="gray.200"
       _hover={{ bg: "gray.50" }}
@@ -35,7 +37,7 @@ function VaccineCard({ onOpen }: VaccineCardProps) {
         <Stack flexGrow="1" ml={[3, 4]}>
           <Flex display={["block", "flex"]} justify="space-between">
             <Flex direction="column">
-              <Heading fontSize={["md", "lg"]}>Vaccine Title</Heading>
+              <Heading fontSize={["md", "lg"]}>{vaccine.name}</Heading>
             </Flex>
 
             <Flex>
@@ -58,7 +60,7 @@ function VaccineCard({ onOpen }: VaccineCardProps) {
                 />
               </Tooltip>
               <Tooltip label="Update the Vaccine" aria-label="Edit Ad">
-                <Link to={paths.updateVaccine("vaccine_id")}>
+                <Link to={paths.updateVaccine(vaccine.id)}>
                   <IconButton
                     size="sm"
                     ml={1}
@@ -81,14 +83,7 @@ function VaccineCard({ onOpen }: VaccineCardProps) {
               </Tooltip>
             </Flex>
           </Flex>
-          <Text display={["none", "none", "block"]}>
-            COVID-19 vaccines are used to prepare the body's immune system to
-            protect against COVID-19. These vaccines are a vital tool to help
-            stop the COVID-19 pandemic. Everyone ages 6 months and older should
-            get a free COVID-19 vaccination. This includes people who are
-            pregnant and those planning to become pregnant. You should get a
-            COVID-19 vaccine even if you have already had COVID-19.
-          </Text>
+          <Text display={["none", "none", "block"]}>{vaccine.description}</Text>
           <Flex justify="space-between">
             {/* <Text fontSize={["sm", "md"]}>9 days ago</Text> */}
           </Flex>

@@ -2,11 +2,16 @@ import { Flex } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/hooks";
 import DeleteModal from "./DeleteModal";
 import VaccineCard from "./VaccineCard";
+import { useAppDispatch, useAppSelector } from "../store/hook";
 
-type VaccineListProps = {};
-
-function VaccineList({}: VaccineListProps) {
+function VaccineList() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useAppDispatch();
+  const { vaccines } = useAppSelector((state) => state.vaccine);
+
+  const handleDelete = (vaccineId: number) => {
+    // dispatch(deleteVaccine(vaccineId));
+  };
 
   return (
     <Flex
@@ -17,12 +22,14 @@ function VaccineList({}: VaccineListProps) {
       maxW="4xl"
       mx="auto"
     >
-      <DeleteModal isOpen={isOpen} onClose={onClose} />
-      {Array(10)
-        .fill(10)
-        .map((item, index) => {
-          return <VaccineCard key={index} onOpen={onOpen} />;
-        })}
+      <DeleteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        handleDelete={handleDelete}
+      />
+      {vaccines.map((vaccine, index) => {
+        return <VaccineCard key={index} vaccine={vaccine} onOpen={onOpen} />;
+      })}
     </Flex>
   );
 }

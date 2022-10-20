@@ -3,14 +3,15 @@ import { Box, Container, Flex, Heading } from "@chakra-ui/layout";
 import { AiOutlineMenu } from "react-icons/ai";
 import Link from "./Link";
 import paths from "../paths";
-import { useAuthActions } from "../features/auth/AuthContextProvider";
+import { useAppDispatch } from "../store/hook";
+import { logout } from "../features/auth/AuthSlice";
 
 type NavbarProps = {
   onOpen: () => void;
 };
 
 function Navbar({ onOpen }: NavbarProps) {
-  const { logout } = useAuthActions();
+  const dispatch = useAppDispatch();
 
   return (
     <Box borderBottom="1px solid " borderColor="gray.200" py={3}>
@@ -28,7 +29,13 @@ function Navbar({ onOpen }: NavbarProps) {
                 Vaccine Management
               </Heading>
             </Link>
-            <Button ml="4" onClick={logout}>
+            <Button
+              ml="4"
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(logout());
+              }}
+            >
               Log Out
             </Button>
           </Flex>

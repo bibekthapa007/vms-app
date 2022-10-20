@@ -9,14 +9,11 @@ import {
   FormErrorMessage,
   Input,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import paths from "../paths";
-import {
-  useAuthActions,
-  useAuthState,
-} from "../features/auth/AuthContextProvider";
+import { useAppSelector, useAppDispatch } from "../store/hook";
+import { signin } from "../features/auth/AuthSlice";
 
 type FormData = {
   email: string;
@@ -24,8 +21,9 @@ type FormData = {
 };
 
 export default function SignInForm() {
-  const { signinError, isSigningIn } = useAuthState();
-  const { signin } = useAuthActions();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { signinError, isSigningIn } = useAppSelector((state) => state.auth);
 
   const {
     handleSubmit,
@@ -34,7 +32,9 @@ export default function SignInForm() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit((data) => {
-    signin(data.email, data.password);
+    dispatch(signin(data)).then(() => {
+      navigate("/");
+    });
   });
 
   return (
@@ -52,10 +52,8 @@ export default function SignInForm() {
             },
           })}
         />
-        {errors["email"] && (
-          <FormErrorMessage>
-            {errors["email"]["message"] as string}{" "}
-          </FormErrorMessage>
+        {errors.email && (
+          <FormErrorMessage>{errors.email.message as string}</FormErrorMessage>
         )}
       </FormControl>
       <FormControl id="password" mt="2" isInvalid={Boolean(errors.password)}>

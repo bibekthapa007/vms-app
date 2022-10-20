@@ -1,0 +1,265 @@
+// import {
+//   createContext,
+//   FC,
+//   ReactNode,
+//   useCallback,
+//   useContext,
+//   useMemo,
+//   useReducer,
+// } from "react";
+// import { getVaccines } from "../../api";
+// import { IVaccineState, Vaccine } from "../../types/vaccine";
+
+// const initialState: IVaccineState = {
+//   vaccines: [],
+//   vaccinesLoading: false,
+//   vaccinesError: "",
+//   vaccine: null,
+//   vaccineLoading: false,
+//   vaccineError: "",
+
+//   deleting: true,
+//   deleteError: "",
+// };
+
+// const initialContext: IVaccineContext = {
+//   state: initialState,
+//   actions: {
+//     fetchVaccines: () => undefined,
+//     fetchVaccine: () => undefined,
+//     createVaccine: () => undefined,
+//     updateVaccine: () => undefined,
+//     deleteVaccine: () => undefined,
+//   },
+// };
+
+// const reducer = (
+//   state: IVaccineState,
+//   action: VaccineAction
+// ): IVaccineState => {
+//   const { type, payload } = action;
+//   switch (type) {
+//     case VaccineActionType.FETCH_VACCINES_REQUEST:
+//       return {
+//         ...state,
+//         vaccinesLoading: true,
+//       };
+
+//     case VaccineActionType.FETCH_VACCINES_SUCCESS:
+//       return {
+//         ...state,
+//         vaccines: payload?.vaccines as Vaccine[],
+//         vaccinesLoading: false,
+//       };
+
+//     case VaccineActionType.FETCH_VACCINES_FAILURE:
+//       return {
+//         ...state,
+//         vaccinesLoading: false,
+//         vaccines: [],
+//       };
+
+//     case VaccineActionType.DELETE_VACCINE_REQUEST:
+//       return {
+//         ...state,
+//         deleting: true,
+//       };
+
+//     case VaccineActionType.DELETE_VACCINE_SUCCESS:
+//       const newVaccines = state.vaccines.filter(
+//         (value) => value.id != payload?.id
+//       );
+//       return {
+//         ...state,
+//         vaccines: newVaccines,
+//         deleting: false,
+//         deleteError: "",
+//       };
+
+//     case VaccineActionType.DELETE_VACCINE_FAILURE:
+//       return {
+//         ...state,
+//         deleting: false,
+//       };
+
+//     default:
+//       return state;
+//   }
+// };
+
+// const VaccineContext = createContext<IVaccineContext>(initialContext);
+
+// const VaccineProvider: FC<{ children: ReactNode }> = ({ children }) => {
+//   const [state, dispatch] = useReducer(reducer, initialState);
+//   console.log(state);
+
+//   const fetchVaccines = useCallback(async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         dispatch({ type: VaccineActionType.FETCH_VACCINES_REQUEST });
+//         const vaccines = await getVaccines();
+//         if (vaccines) {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_SUCCESS,
+//             payload: { vaccines },
+//           });
+//         } else {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//           });
+//         }
+//       } else {
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//         });
+//       }
+//     } catch (error: Error | any) {
+//       dispatch({
+//         type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//       });
+//     }
+//   }, []);
+
+//   const fetchVaccine = useCallback(async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         dispatch({ type: VaccineActionType.FETCH_VACCINES_REQUEST });
+//         const vaccines = await getVaccines();
+//         if (vaccines) {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_SUCCESS,
+//             payload: { vaccines },
+//           });
+//         } else {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//           });
+//         }
+//       } else {
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//         });
+//       }
+//     } catch (error: Error | any) {
+//       dispatch({
+//         type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//       });
+//     }
+//   }, []);
+
+//   const createVaccine = useCallback(async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         dispatch({ type: VaccineActionType.FETCH_VACCINES_REQUEST });
+//         const vaccines = await getVaccines();
+//         if (vaccines) {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_SUCCESS,
+//             payload: { vaccines },
+//           });
+//         } else {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//           });
+//         }
+//       } else {
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//         });
+//       }
+//     } catch (error: Error | any) {
+//       dispatch({
+//         type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//       });
+//     }
+//   }, []);
+
+//   const updateVaccine = useCallback(async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         dispatch({ type: VaccineActionType.FETCH_VACCINES_REQUEST });
+//         const vaccines = await getVaccines();
+//         if (vaccines) {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_SUCCESS,
+//             payload: { vaccines },
+//           });
+//         } else {
+//           dispatch({
+//             type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//           });
+//         }
+//       } else {
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//         });
+//       }
+//     } catch (error: Error | any) {
+//       dispatch({
+//         type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//       });
+//     }
+//   }, []);
+
+//   const deleteVaccine = useCallback(async (vaccine_id: number) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (token) {
+//         dispatch({ type: VaccineActionType.FETCH_VACCINES_REQUEST });
+//         await deleteVaccine(vaccine_id);
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_SUCCESS,
+//           payload: { id: vaccine_id },
+//         });
+//       } else {
+//         dispatch({
+//           type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//         });
+//       }
+//     } catch (error: Error | any) {
+//       dispatch({
+//         type: VaccineActionType.FETCH_VACCINES_FAILURE,
+//       });
+//     }
+//   }, []);
+
+//   const value = useMemo(
+//     () => ({
+//       state,
+//       actions: {
+//         fetchVaccines,
+//         fetchVaccine,
+//         createVaccine,
+//         updateVaccine,
+//         deleteVaccine,
+//       },
+//     }),
+//     [
+//       fetchVaccines,
+//       fetchVaccine,
+//       createVaccine,
+//       updateVaccine,
+//       deleteVaccine,
+//       state,
+//     ]
+//   );
+
+//   return (
+//     <VaccineContext.Provider value={value}>{children}</VaccineContext.Provider>
+//   );
+// };
+
+// export const useVaccineState = () => {
+//   const { state } = useContext(VaccineContext);
+//   return state;
+// };
+// export const useVaccineActions = () => {
+//   const { actions } = useContext(VaccineContext);
+//   return actions;
+// };
+
+// export default VaccineProvider;

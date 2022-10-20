@@ -12,6 +12,10 @@ import {
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  useAuthActions,
+  useAuthState,
+} from "../features/auth/AuthContextProvider";
 
 type FormData = {
   email: string;
@@ -19,11 +23,9 @@ type FormData = {
 };
 
 export default function SignupForm() {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  let navigate = useNavigate();
+  const { signupError, isSigningUp } = useAuthState();
+  const { signup } = useAuthActions();
 
-  const apiUrl = process.env.REACT_APP_SERVER_UR;
   const {
     handleSubmit,
     register,
@@ -31,20 +33,7 @@ export default function SignupForm() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit((data) => {
-    console.log("values", data);
-    setLoading(true);
-    axios({
-      method: "post",
-      url: `${apiUrl}/auth/register`,
-      data,
-    }).then((res) => {
-      setLoading(false);
-      if (res.data.error) {
-        setError(res.data.error);
-      } else {
-        navigate("/");
-      }
-    });
+    signup(data.email, data.password);
   });
 
   return (
@@ -80,7 +69,7 @@ export default function SignupForm() {
         )}
       </FormControl>
       <Text color="red.700" fontSize="sm">
-        {error && error}
+        {signupError && signupError}
       </Text>
 
       <Box
@@ -95,7 +84,7 @@ export default function SignupForm() {
             <Link to={"/auth/signin"}>SignIn</Link>
           </Heading>
         </Box>
-        <Button colorScheme="blue" type="submit" disabled={loading}>
+        <Button colorScheme="blue" type="submit" disabled={isSigningUp}>
           SignUp
         </Button>
       </Box>

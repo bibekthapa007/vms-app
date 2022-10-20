@@ -13,6 +13,10 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import paths from "../paths";
+import {
+  useAuthActions,
+  useAuthState,
+} from "../features/auth/AuthContextProvider";
 
 type FormData = {
   email: string;
@@ -20,10 +24,8 @@ type FormData = {
 };
 
 export default function SignInForm() {
-  const apiUrl = process.env.REACT_APP_SERVER_UR;
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  let navigate = useNavigate();
+  const { signinError, isSigningIn } = useAuthState();
+  const { signin } = useAuthActions();
 
   const {
     handleSubmit,
@@ -32,24 +34,7 @@ export default function SignInForm() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit((data) => {
-    setLoading(true);
-    axios({
-      method: "post",
-      url: `${apiUrl}/auth/login`,
-      data,
-    })
-      .then((res) => {
-        setLoading(false);
-        if (res.data.error) {
-          setError(res.data.error);
-        } else {
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        setError(error.message);
-      });
+    signin(data.email, data.password);
   });
 
   return (
@@ -73,7 +58,7 @@ export default function SignInForm() {
           </FormErrorMessage>
         )}
       </FormControl>
-      <FormControl id="email" mt="2" isInvalid={Boolean(errors.password)}>
+      <FormControl id="password" mt="2" isInvalid={Boolean(errors.password)}>
         <FormLabel>Password</FormLabel>
         <Input
           type="password"
@@ -93,7 +78,7 @@ export default function SignInForm() {
         <Link to="/forgotPassword">Forgot Password?</Link>
       </Heading>
       <Text color="red.700" fontSize="sm">
-        {error && error}
+        {signinError && signinError}
       </Text>
       <Box
         display="flex"
@@ -107,7 +92,7 @@ export default function SignInForm() {
             <Link to={paths.signup}>Create account</Link>
           </Heading>
         </Box>
-        <Button colorScheme="blue" type="submit" disabled={loading}>
+        <Button colorScheme="blue" type="submit" disabled={isSigningIn}>
           Sign In
         </Button>
       </Box>

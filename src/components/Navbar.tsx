@@ -1,15 +1,17 @@
-import React from "react";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Box, Container, Flex, Heading } from "@chakra-ui/layout";
 import { AiOutlineMenu } from "react-icons/ai";
 import Link from "./Link";
 import paths from "../paths";
+import { useAuthActions } from "../features/auth/AuthContextProvider";
 
 type NavbarProps = {
   onOpen: () => void;
 };
 
 function Navbar({ onOpen }: NavbarProps) {
+  const { logout } = useAuthActions();
+
   return (
     <Box borderBottom="1px solid " borderColor="gray.200" py={3}>
       <Container maxW="container.2xl">
@@ -26,7 +28,9 @@ function Navbar({ onOpen }: NavbarProps) {
                 Vaccine Management
               </Heading>
             </Link>
-            <Button ml="4">Log Out</Button>
+            <Button ml="4" onClick={logout}>
+              Log Out
+            </Button>
           </Flex>
           <Flex align="center" flexGrow="0">
             <Flex display={["none", "none", "block"]}>

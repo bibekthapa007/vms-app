@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Heading,
@@ -9,7 +8,6 @@ import {
   FormErrorMessage,
   Input,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store/hook";
@@ -22,6 +20,8 @@ type FormData = {
 
 export default function SignupForm() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { signupError, isSigningUp } = useAppSelector((state) => state.auth);
 
   const {
@@ -31,8 +31,9 @@ export default function SignupForm() {
   } = useForm<FormData>();
 
   const onSubmit = handleSubmit((data) => {
-    signup(data);
-    dispatch(signup(data));
+    dispatch(signup(data)).then(() => {
+      navigate("/");
+    });
   });
 
   return (

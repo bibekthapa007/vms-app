@@ -1,11 +1,15 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { createStandaloneToast } from "@chakra-ui/toast";
+
 import {
   IVaccineState,
   Vaccine,
   VaccineResponse,
   VaccinesResponse,
 } from "../../types/vaccine";
+
+const toast = createStandaloneToast();
 
 export const fetchVaccines = createAsyncThunk(
   "vaccine/list",
@@ -54,8 +58,8 @@ export const createVaccine = createAsyncThunk(
   async (vaccine: Vaccine, thunkApi) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post<VaccinesResponse>(
-        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/create`,
+      const response = await axios.post<VaccineResponse>(
+        `${process.env.REACT_APP_SERVER_URL}/api/vaccine`,
         vaccine,
         {
           headers: {
@@ -77,7 +81,7 @@ export const updateVaccine = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post<VaccinesResponse>(
-        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/update/${vaccine.id}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine.id}`,
         vaccine,
         {
           headers: {
@@ -98,8 +102,8 @@ export const deleteVaccine = createAsyncThunk(
   async (vaccine_id: number, thunkApi) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.delete<VaccinesResponse>(
-        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/delete/${vaccine_id}`,
+      const response = await axios.delete<VaccineResponse>(
+        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine_id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -107,6 +111,7 @@ export const deleteVaccine = createAsyncThunk(
           },
         }
       );
+      response.data.vaccine_id = vaccine_id;
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.message);
@@ -122,11 +127,14 @@ const initialState: IVaccineState = {
   vaccineLoading: false,
   vaccineError: "",
 
-  deleting: true,
-  deleteError: "",
-
-  creating: true,
+  creating: false,
   createError: "",
+
+  updating: false,
+  updateError: "",
+
+  deleting: false,
+  deleteError: "",
 };
 
 export const userSlice = createSlice({
@@ -137,6 +145,7 @@ export const userSlice = createSlice({
     builder
       .addCase(fetchVaccines.pending, (state, action) => {
         state.vaccinesLoading = true;
+        state.vaccinesError = "";
       })
       .addCase(
         fetchVaccines.fulfilled,
@@ -152,6 +161,7 @@ export const userSlice = createSlice({
 
       .addCase(fetchVaccine.pending, (state, action) => {
         state.vaccineLoading = true;
+        state.vaccineError = "";
       })
       .addCase(
         fetchVaccine.fulfilled,
@@ -163,6 +173,53 @@ export const userSlice = createSlice({
       .addCase(fetchVaccine.rejected, (state, action: PayloadAction<any>) => {
         state.vaccinesLoading = false;
         state.vaccinesError = action.payload;
+      })
+
+      .addCase(createVaccine.pending, (state, action) => {
+        state.creating = true;
+        state.createError = "";
+      })
+      .addCase(
+        createVaccine.fulfilled,
+        (state, action: PayloadAction<VaccineResponse>) => {
+          state.creating = false;
+
+          toast.toast({
+            title: "Vaccine Created successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      )
+      .addCase(createVaccine.rejected, (state, action: PayloadAction<any>) => {
+        state.creating = false;
+        state.createError = action.payload;
+      })
+
+      .addCase(deleteVaccine.pending, (state, action) => {
+        state.deleting = true;
+        state.deleteError = "";
+      })
+      .addCase(
+        deleteVaccine.fulfilled,
+        (state, action: PayloadAction<VaccineResponse>) => {
+          state.deleting = false;
+          state.vaccines = state.vaccines.filter((v) => {
+            return !(v.id === action.payload.vaccine_id);
+          });
+
+          toast.toast({
+            title: "Vaccine deleted successfully",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      )
+      .addCase(deleteVaccine.rejected, (state, action: PayloadAction<any>) => {
+        state.deleting = false;
+        state.deleteError = action.payload;
       });
   },
 });

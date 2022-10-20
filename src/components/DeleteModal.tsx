@@ -8,20 +8,17 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
+import { useAppSelector } from "../store/hook";
 
 type DeleteModalProps = {
   isOpen: boolean;
   onOpen?: () => void;
   onClose: () => void;
-  handleDelete: (vaccine_id: number) => void;
+  handleDelete: () => void;
 };
 
-function DeleteModal({
-  isOpen,
-  onOpen,
-  onClose,
-  handleDelete,
-}: DeleteModalProps) {
+function DeleteModal({ isOpen, onClose, handleDelete }: DeleteModalProps) {
+  const { deleting } = useAppSelector((state) => state.vaccine);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -38,10 +35,11 @@ function DeleteModal({
           </Button>
           <Button
             colorScheme="red"
+            isLoading={deleting}
             mr={3}
             onClick={(e) => {
               e.preventDefault();
-              // handleDelete(vaccineId);
+              handleDelete();
             }}
           >
             Delete

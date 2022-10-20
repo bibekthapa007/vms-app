@@ -12,11 +12,11 @@ import paths from "../paths";
 import { Vaccine } from "../types/vaccine";
 
 type VaccineCardProps = {
-  onOpen: (e: any) => void;
+  handleModalOpen: (vaccine_id: number) => void;
   vaccine: Vaccine;
 };
 
-function VaccineCard({ onOpen, vaccine }: VaccineCardProps) {
+function VaccineCard({ handleModalOpen, vaccine }: VaccineCardProps) {
   const [isMandatory, setMandatory] = useState(false);
   return (
     <Link
@@ -76,7 +76,7 @@ function VaccineCard({ onOpen, vaccine }: VaccineCardProps) {
                   aria-label="Delete"
                   onClick={(e) => {
                     e.preventDefault();
-                    return onOpen(e);
+                    return handleModalOpen(vaccine.id);
                   }}
                   icon={<AiOutlineDelete />}
                 />

@@ -15,6 +15,7 @@ export interface VaccinesResponse {
 export interface VaccineResponse {
   vaccine: Vaccine;
   message: string;
+  vaccine_id?: number;
 }
 
 export interface IVaccineState {
@@ -26,11 +27,14 @@ export interface IVaccineState {
   vaccineLoading: boolean;
   vaccineError: string;
 
+  creating: boolean;
+  createError: "";
+
   deleting: boolean;
   deleteError: "";
 
-  creating: boolean;
-  createError: "";
+  updating: boolean;
+  updateError: "";
 }
 
 export interface IVaccineAction {

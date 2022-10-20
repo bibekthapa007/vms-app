@@ -1,5 +1,3 @@
-import { useState } from "react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -18,21 +16,14 @@ import { Textarea } from "@chakra-ui/textarea";
 
 import DashboardLayout from "../../components/DashboardLayout";
 import Card from "../../components/Card";
-
-type Vaccine = {
-  id: string;
-  name: string;
-  description: string;
-  no_of_does: number;
-  is_mandatory?: boolean;
-  image_link?: string;
-};
+import { useAppDispatch, useAppSelector } from "../../store/hook";
+import { createVaccine } from "./VaccineSlice";
+import { Vaccine, VaccineResponse } from "../../types/vaccine";
 
 export default function CreateVaccinePage() {
-  const apiUrl = process.env.REACT_APP_SERVER_UR;
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  let navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { creating, createError } = useAppSelector((state) => state.vaccine);
 
   const {
     handleSubmit,
@@ -41,24 +32,13 @@ export default function CreateVaccinePage() {
   } = useForm<Vaccine>();
 
   const onSubmit = handleSubmit((data) => {
-    setLoading(true);
-    axios({
-      method: "post",
-      url: `${apiUrl}//`,
-      data,
-    })
-      .then((res) => {
-        setLoading(false);
-        if (res.data.error) {
-          setError(res.data.error);
-        } else {
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        setError(error.message);
-      });
+    dispatch(createVaccine(data)).then((data) => {
+      let payload = data.payload as VaccineResponse;
+      let id = payload.vaccine.id;
+      if (id) {
+        navigate(`/vaccine/edit/${id}`);
+      }
+    });
   });
 
   return (
@@ -110,15 +90,14 @@ export default function CreateVaccinePage() {
             <FormControl
               mb={4}
               id="no_of_does"
-              isInvalid={Boolean(errors.no_of_does)}
+              isInvalid={Boolean(errors.no_of_doses)}
               isRequired
             >
               <FormLabel>No of does</FormLabel>
               <Input
                 type="number"
                 borderColor="gray.300"
-                placeholder="1"
-                {...register("no_of_does", {
+                {...register("no_of_doses", {
                   required: "Please enter no of does",
                 })}
               />
@@ -140,13 +119,13 @@ export default function CreateVaccinePage() {
           </Card>
 
           <Text color="red.700" fontSize="sm">
-            {error && error}
+            {createError && createError}
           </Text>
 
           <Flex justify="flex-end">
             <Button
               type="submit"
-              isLoading={loading}
+              isLoading={creating}
               mx={2}
               colorScheme="blue"
               variant="solid"

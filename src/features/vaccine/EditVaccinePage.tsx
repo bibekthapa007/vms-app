@@ -44,8 +44,10 @@ export default function EditVaccinePage() {
   const onSubmit = handleSubmit((data) => {
     data.id = parseInt(id as string);
     dispatch(editVaccine(data)).then((data) => {
-      let payload = data.payload as VaccineResponse;
-      reset(payload.vaccine as Vaccine);
+      if ((data.meta.requestStatus as string) === "fullfilled") {
+        let payload = data.payload as VaccineResponse;
+        reset(payload.vaccine as Vaccine);
+      }
     });
   });
 

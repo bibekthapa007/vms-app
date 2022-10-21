@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import UserRoute from "./components/UserRoute";
 import { fetchUserData } from "./features/auth/AuthSlice";
 
@@ -25,46 +25,44 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      <Route path={paths.signin} element={<SignInPage />} />
+      <Route path={paths.signup} element={<SignUpPage />} />
+      <Route
+        path={paths.home}
+        element={
+          <UserRoute>
+            <HomePage />
+          </UserRoute>
+        }
+      />
+      <Route path={"/"} element={<VaccineRoute />}>
         <Route
-          path={paths.home}
+          path={paths.vaccine}
           element={
             <UserRoute>
-              <HomePage />
+              <VaccinePage />
             </UserRoute>
           }
         />
-        <Route path={paths.signin} element={<SignInPage />} />
-        <Route path={paths.signup} element={<SignUpPage />} />
-        <Route path={"/"} element={<VaccineRoute />}>
-          <Route
-            path={paths.vaccine}
-            element={
-              <UserRoute>
-                <VaccinePage />
-              </UserRoute>
-            }
-          />
-          <Route
-            path={paths.createVaccine}
-            element={
-              <UserRoute>
-                <CreateVaccinePage />
-              </UserRoute>
-            }
-          />
-          <Route
-            path={"/vaccine/edit/:vaccine_id"}
-            element={
-              <UserRoute>
-                <EditVaccinePage />
-              </UserRoute>
-            }
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        <Route
+          path={paths.createVaccine}
+          element={
+            <UserRoute>
+              <CreateVaccinePage />
+            </UserRoute>
+          }
+        />
+        <Route
+          path={"/vaccine/edit/:vaccine_id"}
+          element={
+            <UserRoute>
+              <EditVaccinePage />
+            </UserRoute>
+          }
+        />
+      </Route>
+    </Routes>
   );
 }
 

@@ -27,7 +27,9 @@ export const fetchVaccines = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message);
+      return thunkApi.rejectWithValue(
+        error.response.data.message || error.message
+      );
     }
   }
 );
@@ -48,7 +50,9 @@ export const fetchVaccine = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message);
+      return thunkApi.rejectWithValue(
+        error.response.data.message || error.message
+      );
     }
   }
 );
@@ -70,7 +74,9 @@ export const createVaccine = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message);
+      return thunkApi.rejectWithValue(
+        error.response.data.message || error.message
+      );
     }
   }
 );
@@ -80,7 +86,6 @@ export const editVaccine = createAsyncThunk(
   async (vaccine: Vaccine, thunkApi) => {
     try {
       const token = localStorage.getItem("token");
-      console.log(vaccine, "Vacccine");
       const response = await axios.put<VaccineResponse>(
         `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine.id}`,
         vaccine,
@@ -93,7 +98,9 @@ export const editVaccine = createAsyncThunk(
       );
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message);
+      return thunkApi.rejectWithValue(
+        error.response.data.message || error.message
+      );
     }
   }
 );
@@ -115,7 +122,9 @@ export const deleteVaccine = createAsyncThunk(
       response.data.vaccine_id = vaccine_id;
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.message);
+      return thunkApi.rejectWithValue(
+        error.response.data.message || error.message
+      );
     }
   }
 );
@@ -138,8 +147,8 @@ const initialState: IVaccineState = {
   deleteError: "",
 };
 
-export const userSlice = createSlice({
-  name: "user",
+export const vaccineSlice = createSlice({
+  name: "vaccine",
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -163,6 +172,7 @@ export const userSlice = createSlice({
       .addCase(fetchVaccine.pending, (state, action) => {
         state.vaccineLoading = true;
         state.vaccineError = "";
+        state.editError = "";
       })
       .addCase(
         fetchVaccine.fulfilled,
@@ -250,4 +260,4 @@ export const userSlice = createSlice({
 
 // export const selectCount = (state: RootState) => state.auth.user;
 
-export default userSlice.reducer;
+export default vaccineSlice.reducer;

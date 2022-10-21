@@ -38,7 +38,7 @@ export const fetchVaccine = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get<VaccineResponse>(
-        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine_id}}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine_id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -75,12 +75,13 @@ export const createVaccine = createAsyncThunk(
   }
 );
 
-export const updateVaccine = createAsyncThunk(
-  "vaccine/update",
+export const editVaccine = createAsyncThunk(
+  "vaccine/edit",
   async (vaccine: Vaccine, thunkApi) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post<VaccinesResponse>(
+      console.log(vaccine, "Vacccine");
+      const response = await axios.put<VaccineResponse>(
         `${process.env.REACT_APP_SERVER_URL}/api/vaccine/${vaccine.id}`,
         vaccine,
         {
@@ -130,8 +131,8 @@ const initialState: IVaccineState = {
   creating: false,
   createError: "",
 
-  updating: false,
-  updateError: "",
+  editing: false,
+  editError: "",
 
   deleting: false,
   deleteError: "",
@@ -197,6 +198,28 @@ export const userSlice = createSlice({
         state.createError = action.payload;
       })
 
+      .addCase(editVaccine.pending, (state, action) => {
+        state.editing = true;
+        state.editError = "";
+      })
+      .addCase(
+        editVaccine.fulfilled,
+        (state, action: PayloadAction<VaccineResponse>) => {
+          state.editing = false;
+
+          toast.toast({
+            title: "Vaccine edited successfully",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      )
+      .addCase(editVaccine.rejected, (state, action: PayloadAction<any>) => {
+        state.editing = false;
+        state.editError = action.payload;
+      })
+
       .addCase(deleteVaccine.pending, (state, action) => {
         state.deleting = true;
         state.deleteError = "";
@@ -223,7 +246,7 @@ export const userSlice = createSlice({
       });
   },
 });
-export const {} = userSlice.actions;
+// export const {} = userSlice.actions;
 
 // export const selectCount = (state: RootState) => state.auth.user;
 

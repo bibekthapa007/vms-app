@@ -33,8 +33,8 @@ export interface IVaccineState {
   deleting: boolean;
   deleteError: "";
 
-  updating: boolean;
-  updateError: "";
+  editing: boolean;
+  editError: "";
 }
 
 export interface IVaccineAction {

@@ -17,8 +17,6 @@ function VaccineList() {
     setVaccineId(vaccineId);
   };
 
-  console.log(vaccineId);
-
   const handleDelete = () => {
     if (vaccineId) {
       dispatch(deleteVaccine(vaccineId)).then(() => {

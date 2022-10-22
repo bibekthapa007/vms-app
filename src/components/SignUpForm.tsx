@@ -21,7 +21,6 @@ type FormData = {
 export default function SignupForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const { signupError, isSigningUp } = useAppSelector((state) => state.auth);
 
   const {

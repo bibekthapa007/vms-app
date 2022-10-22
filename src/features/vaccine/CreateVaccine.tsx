@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -18,7 +19,9 @@ import DashboardLayout from "../../components/DashboardLayout";
 import Card from "../../components/Card";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { createVaccine } from "./VaccineSlice";
-import { Vaccine, VaccineResponse } from "../../types/vaccine";
+import { VaccineForm, VaccineResponse } from "../../types/vaccine";
+import { checkFileSize, checkMimeType, maxSelectFile } from "../../utils/image";
+import { Switch } from "@chakra-ui/react";
 
 export default function CreateVaccinePage() {
   const dispatch = useAppDispatch();
@@ -28,19 +31,38 @@ export default function CreateVaccinePage() {
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
-  } = useForm<Vaccine>();
+  } = useForm<VaccineForm>();
+
+  const is_mandatory = watch("is_mandatory");
+  const userFiles = watch("userFiles");
+  const file = userFiles && userFiles[0];
 
   const onSubmit = handleSubmit((data) => {
     dispatch(createVaccine(data)).then((data) => {
       let payload = data.payload as VaccineResponse;
-      let id = payload.vaccine.id;
-      if (id) {
-        navigate(`/vaccine/edit/${id}`);
+      let requestStatus = data.meta.requestStatus as string;
+      if (requestStatus === "fulfilled") {
+        let id = payload.vaccine.id;
+        if (id) {
+          navigate(`/vaccine/edit/${id}`);
+        }
       }
     });
   });
 
+  const fileChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      if (
+        maxSelectFile(event) &&
+        checkMimeType(event) &&
+        checkFileSize(event)
+      ) {
+      }
+    }
+  };
   return (
     <DashboardLayout bgColor="white">
       <Box pt={2} maxW="xl" mx="auto">
@@ -103,7 +125,40 @@ export default function CreateVaccinePage() {
               />
             </FormControl>
 
+            <FormControl
+              mb={4}
+              id="is_mandatory"
+              isInvalid={Boolean(errors.is_mandatory)}
+            >
+              <FormLabel>Is Mandatory</FormLabel>
+              <Switch
+                isChecked={is_mandatory}
+                size="sm"
+                {...register("is_mandatory", { required: false })}
+              />
+            </FormControl>
+
             <FormLabel>Add Image</FormLabel>
+
+            <Input
+              borderColor="gray.300"
+              type="file"
+              accept={"image/*"}
+              id="userFiles"
+              {...register("userFiles", {
+                required: false,
+              })}
+            />
+            {/* <input
+              type="file"
+              id="userFiles"
+              {...register("userFiles", {
+                required: false,
+              })}
+              // onChange={fileChangedHandler}
+              name="userFiles"
+              style={{ display: "none" }}
+            /> */}
 
             <Flex
               align="center"
@@ -112,9 +167,31 @@ export default function CreateVaccinePage() {
               border="1px solid"
               borderColor="gray.200"
               borderRadius="8px"
+              onClick={() => {
+                let element = document.getElementById("userFiles");
+                element && element.click();
+              }}
             >
-              <Heading fontSize="md">Add the Images</Heading>
-              <Text>or drop or upload Image</Text>
+              {file ? (
+                <img
+                  alt="vaccine"
+                  className="profile-user-img img-fluid"
+                  style={{
+                    cursor: "pointer",
+                    height: "auto",
+                    minHeight: "150px",
+                    width: "100%",
+                    border: "2px solid #ddd",
+                    objectFit: "cover",
+                  }}
+                  src={URL.createObjectURL(file)}
+                />
+              ) : (
+                <Box>
+                  <Heading fontSize="md">Add the Images</Heading>
+                  <Text>or click to add</Text>
+                </Box>
+              )}
             </Flex>
           </Card>
 

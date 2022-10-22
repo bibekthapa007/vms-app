@@ -5,6 +5,7 @@ import { createStandaloneToast } from "@chakra-ui/toast";
 import {
   IVaccineState,
   Vaccine,
+  VaccineForm,
   VaccineResponse,
   VaccinesResponse,
 } from "../../types/vaccine";
@@ -59,15 +60,25 @@ export const fetchVaccine = createAsyncThunk(
 
 export const createVaccine = createAsyncThunk(
   "vaccine/create",
-  async (vaccine: Vaccine, thunkApi) => {
+  async (vaccine: VaccineForm, thunkApi) => {
     try {
       const token = localStorage.getItem("token");
+      console.log(vaccine, vaccine.userFiles[0], "Fom create Vaccine");
+      const data = new FormData();
+      data.append("file", vaccine.userFiles[0]);
+      data.append("name", vaccine.name);
+      data.append("description", vaccine.description);
+      data.append(
+        "is_mandatory",
+        JSON.stringify(vaccine.is_mandatory || false)
+      );
+      data.append("no_of_doses", vaccine.no_of_doses);
+
       const response = await axios.post<VaccineResponse>(
         `${process.env.REACT_APP_SERVER_URL}/api/vaccine`,
-        vaccine,
+        data,
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }

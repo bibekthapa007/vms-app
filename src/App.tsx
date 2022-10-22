@@ -28,49 +28,24 @@ function App() {
     <Routes>
       <Route path={paths.signin} element={<SignInPage />} />
       <Route path={paths.signup} element={<SignUpPage />} />
-      <Route
-        path={paths.home}
-        element={
-          <UserRoute>
-            <HomePage />
-          </UserRoute>
-        }
-      />
-      <Route path={"/"} element={<VaccineRoute />}>
-        <Route
-          path={paths.vaccine}
-          element={
-            <UserRoute>
-              <VaccinePage />
-            </UserRoute>
-          }
-        />
-        <Route
-          path={paths.createVaccine}
-          element={
-            <UserRoute>
-              <CreateVaccinePage />
-            </UserRoute>
-          }
-        />
+      <Route path={"/"} element={<ProtectedPageRoute />}>
+        <Route path={paths.home} element={<HomePage />} />
+        <Route path={paths.vaccine} element={<VaccinePage />} />
+        <Route path={paths.createVaccine} element={<CreateVaccinePage />} />
         <Route
           path={"/vaccine/edit/:vaccine_id"}
-          element={
-            <UserRoute>
-              <EditVaccinePage />
-            </UserRoute>
-          }
+          element={<EditVaccinePage />}
         />
       </Route>
     </Routes>
   );
 }
 
-function VaccineRoute() {
+function ProtectedPageRoute() {
   return (
-    <div>
+    <UserRoute>
       <Outlet />
-    </div>
+    </UserRoute>
   );
 }
 

@@ -20,16 +20,20 @@ import Card from "../../components/Card";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 import { editVaccine, fetchVaccine } from "./VaccineSlice";
 import { Vaccine, VaccineResponse } from "../../types/vaccine";
+import { Switch } from "@chakra-ui/react";
 
 export default function EditVaccinePage() {
   const dispatch = useAppDispatch();
   let { vaccine_id: id } = useParams();
-  const { editing, editError } = useAppSelector((state) => state.vaccine);
+  const { editing, editError, vaccine } = useAppSelector(
+    (state) => state.vaccine
+  );
 
   const {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { isDirty, errors },
   } = useForm<Vaccine>();
 
@@ -44,12 +48,15 @@ export default function EditVaccinePage() {
   const onSubmit = handleSubmit((data) => {
     data.id = parseInt(id as string);
     dispatch(editVaccine(data)).then((data) => {
-      if ((data.meta.requestStatus as string) === "fullfilled") {
+      let requestStatus = data.meta.requestStatus as string;
+      if (requestStatus === "fulfilled") {
         let payload = data.payload as VaccineResponse;
         reset(payload.vaccine as Vaccine);
       }
     });
   });
+
+  const is_mandatory = watch("is_mandatory");
 
   return (
     <DashboardLayout bgColor="white">
@@ -113,6 +120,19 @@ export default function EditVaccinePage() {
               />
             </FormControl>
 
+            <FormControl
+              mb={4}
+              id="is_mandatory"
+              isInvalid={Boolean(errors.is_mandatory)}
+            >
+              <FormLabel>Is Mandatory</FormLabel>
+              <Switch
+                isChecked={is_mandatory}
+                size="sm"
+                {...register("is_mandatory", { required: false })}
+              />
+            </FormControl>
+
             <FormLabel>Add Image</FormLabel>
 
             <Flex
@@ -123,8 +143,26 @@ export default function EditVaccinePage() {
               borderColor="gray.200"
               borderRadius="8px"
             >
-              <Heading fontSize="md">Add the Images</Heading>
-              <Text>or drop or upload Image</Text>
+              {vaccine && vaccine.image_link ? (
+                <img
+                  alt="vaccine"
+                  className="profile-user-img img-fluid"
+                  style={{
+                    cursor: "pointer",
+                    height: "auto",
+                    minHeight: "150px",
+                    width: "100%",
+                    border: "2px solid #ddd",
+                    objectFit: "cover",
+                  }}
+                  src={vaccine.image_link}
+                />
+              ) : (
+                <Box>
+                  <Heading fontSize="md">Add the Images</Heading>
+                  <Text>or click to add</Text>
+                </Box>
+              )}
             </Flex>
           </Card>
 

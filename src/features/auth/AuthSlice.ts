@@ -15,7 +15,7 @@ export const signin = createAsyncThunk(
           },
         }
       );
-      const { user, token } = response.data;
+      const { token } = response.data;
       localStorage.setItem("token", token);
 
       return response.data;
@@ -82,6 +82,8 @@ export const userSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem("token");
       state.user = null;
+      state.signinError = "";
+      state.signupError = "";
     },
   },
   extraReducers(builder) {

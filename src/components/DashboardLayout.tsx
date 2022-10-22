@@ -29,7 +29,7 @@ function DashboardLayout({ children, bgColor }: DashboardLayoutData) {
   return (
     <Box>
       <Navbar onOpen={onOpen} />
-      <Box bg={bgColor || "gray.50"} minHeight="calc(100vh - 80px)">
+      <Box bg={"gray.100"} minHeight="calc(100vh - 80px)">
         {children}
       </Box>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>

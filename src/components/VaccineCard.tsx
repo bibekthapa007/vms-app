@@ -26,12 +26,22 @@ function VaccineCard({ handleModalOpen, vaccine }: VaccineCardProps) {
       borderColor="gray.200"
       _hover={{ bg: "gray.50" }}
     >
-      <Box display="flex" borderRadius={10} p={[0, 2, 4]} my={[4, 4]}>
+      <Box
+        display="flex"
+        boxShadow="md"
+        borderRadius={10}
+        p={[0, 2, 4]}
+        my={[4, 4]}
+        bg={"white"}
+      >
         <Image
           objectFit="contain"
           width={["120px", "120px", "200px"]}
           height="100%"
-          src="https://images.unsplash.com/photo-1608326389386-0305acbe600f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=455&q=80"
+          src={
+            vaccine.image_link ||
+            "https://images.unsplash.com/photo-1608326389386-0305acbe600f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=455&q=80"
+          }
           alt="Vaccine Title"
         />
         <Stack flexGrow="1" ml={[3, 4]}>

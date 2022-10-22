@@ -5,6 +5,16 @@ export interface Vaccine {
   no_of_doses: string;
   is_mandatory: boolean;
   image_link: string;
+  userFiles: any;
+}
+
+export interface VaccineForm {
+  id: number;
+  name: string;
+  description: any;
+  no_of_doses: string;
+  is_mandatory: boolean;
+  userFiles: any;
 }
 
 export interface VaccinesResponse {

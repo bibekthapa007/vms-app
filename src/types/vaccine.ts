@@ -38,13 +38,13 @@ export interface IVaccineState {
   vaccineError: string;
 
   creating: boolean;
-  createError: "";
+  createError: '';
 
   deleting: boolean;
-  deleteError: "";
+  deleteError: '';
 
   editing: boolean;
-  editError: "";
+  editError: '';
 }
 
 export interface IVaccineAction {

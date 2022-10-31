@@ -1,10 +1,10 @@
-import { Button, IconButton } from "@chakra-ui/button";
-import { Box, Container, Flex, Heading } from "@chakra-ui/layout";
-import { AiOutlineMenu } from "react-icons/ai";
-import Link from "./Link";
-import paths from "../paths";
-import { useAppDispatch } from "../store/hook";
-import { logout } from "../features/auth/AuthSlice";
+import { Button, IconButton } from '@chakra-ui/button';
+import { Box, Container, Flex, Heading } from '@chakra-ui/layout';
+import { AiOutlineMenu } from 'react-icons/ai';
+import Link from './Link';
+import paths from '../paths';
+import { useAppDispatch } from '../store/hook';
+import { logout } from '../features/auth/AuthSlice';
 
 type NavbarProps = {
   onOpen: () => void;
@@ -22,7 +22,7 @@ function Navbar({ onOpen }: NavbarProps) {
               aria-label="Main Drawer"
               onClick={onOpen}
               icon={<AiOutlineMenu />}
-              display={["inherit", "inherit", "none", "none"]}
+              display={['inherit', 'inherit', 'none', 'none']}
             />
             <Link to={paths.home}>
               <Heading ml={2} as="h6" fontSize="2xl">
@@ -31,7 +31,7 @@ function Navbar({ onOpen }: NavbarProps) {
             </Link>
             <Button
               ml="4"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 dispatch(logout());
               }}
@@ -40,7 +40,7 @@ function Navbar({ onOpen }: NavbarProps) {
             </Button>
           </Flex>
           <Flex align="center" flexGrow="0">
-            <Flex display={["none", "none", "block"]}>
+            <Flex display={['none', 'none', 'block']}>
               <Link to={paths.vaccine} ml={4}>
                 Vaccine
               </Link>

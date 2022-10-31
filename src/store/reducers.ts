@@ -1,6 +1,6 @@
-import { combineReducers } from "redux";
-import auth from "../features/auth/AuthSlice";
-import vaccine from "../features/vaccine/VaccineSlice";
+import { combineReducers } from 'redux';
+import auth from '../features/auth/AuthSlice';
+import vaccine from '../features/vaccine/VaccineSlice';
 
 const reducers = combineReducers({
   auth,

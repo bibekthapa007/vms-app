@@ -1,33 +1,27 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
-import { Box } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-} from "@chakra-ui/form-control";
-import { Input } from "@chakra-ui/input";
-import { Heading } from "@chakra-ui/layout";
-import { Text } from "@chakra-ui/layout";
-import { Flex } from "@chakra-ui/layout";
-import { Textarea } from "@chakra-ui/textarea";
+import { Box } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/form-control';
+import { Input } from '@chakra-ui/input';
+import { Heading } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Flex } from '@chakra-ui/layout';
+import { Textarea } from '@chakra-ui/textarea';
 
-import DashboardLayout from "../../components/DashboardLayout";
-import Card from "../../components/Card";
-import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { editVaccine, fetchVaccine } from "./VaccineSlice";
-import { Vaccine, VaccineResponse } from "../../types/vaccine";
-import { Switch } from "@chakra-ui/react";
+import DashboardLayout from '../../components/DashboardLayout';
+import Card from '../../components/Card';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { editVaccine, fetchVaccine } from './VaccineSlice';
+import { Vaccine, VaccineResponse } from '../../types/vaccine';
+import { Switch } from '@chakra-ui/react';
 
 export default function EditVaccinePage() {
   const dispatch = useAppDispatch();
   let { vaccine_id: id } = useParams();
-  const { editing, editError, vaccine } = useAppSelector(
-    (state) => state.vaccine
-  );
+  const { editing, editError, vaccine } = useAppSelector(state => state.vaccine);
 
   const {
     handleSubmit,
@@ -39,24 +33,24 @@ export default function EditVaccinePage() {
 
   useEffect(() => {
     id &&
-      dispatch(fetchVaccine(parseInt(id))).then((data) => {
+      dispatch(fetchVaccine(parseInt(id))).then(data => {
         let payload = data.payload as VaccineResponse;
         reset(payload.vaccine as Vaccine);
       });
   }, [id, dispatch, reset]);
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(data => {
     data.id = parseInt(id as string);
-    dispatch(editVaccine(data)).then((data) => {
+    dispatch(editVaccine(data)).then(data => {
       let requestStatus = data.meta.requestStatus as string;
-      if (requestStatus === "fulfilled") {
+      if (requestStatus === 'fulfilled') {
         let payload = data.payload as VaccineResponse;
         reset(payload.vaccine as Vaccine);
       }
     });
   });
 
-  const is_mandatory = watch("is_mandatory");
+  const is_mandatory = watch('is_mandatory');
 
   return (
     <DashboardLayout bgColor="white">
@@ -67,69 +61,46 @@ export default function EditVaccinePage() {
               Edit Vaccine
             </Heading>
 
-            <FormControl
-              mb={4}
-              id="name"
-              isInvalid={Boolean(errors.description)}
-              isRequired
-            >
+            <FormControl mb={4} id="name" isInvalid={Boolean(errors.description)} isRequired>
               <FormLabel>Name</FormLabel>
               <Input
                 borderColor="gray.300"
                 placeholder="Name"
                 isInvalid={Boolean(errors.name)}
-                {...register("name", {
-                  required: "Please enter name.",
+                {...register('name', {
+                  required: 'Please enter name.',
                 })}
               />
-              {errors.name && (
-                <FormErrorMessage>
-                  {errors.name?.message as string}
-                </FormErrorMessage>
-              )}
+              {errors.name && <FormErrorMessage>{errors.name?.message as string}</FormErrorMessage>}
             </FormControl>
-            <FormControl
-              mb={4}
-              id="description"
-              isInvalid={Boolean(errors.description)}
-              isRequired
-            >
+            <FormControl mb={4} id="description" isInvalid={Boolean(errors.description)} isRequired>
               <FormLabel>Description</FormLabel>
               <Textarea
                 borderColor="gray.300"
                 size="sm"
                 placeholder="Description"
-                {...register("description", {
-                  required: "Please enter description.",
+                {...register('description', {
+                  required: 'Please enter description.',
                 })}
               />
             </FormControl>
-            <FormControl
-              mb={4}
-              id="no_of_does"
-              isInvalid={Boolean(errors.no_of_doses)}
-              isRequired
-            >
+            <FormControl mb={4} id="no_of_does" isInvalid={Boolean(errors.no_of_doses)} isRequired>
               <FormLabel>No of does</FormLabel>
               <Input
                 type="number"
                 borderColor="gray.300"
-                {...register("no_of_doses", {
-                  required: "Please enter no of does",
+                {...register('no_of_doses', {
+                  required: 'Please enter no of does',
                 })}
               />
             </FormControl>
 
-            <FormControl
-              mb={4}
-              id="is_mandatory"
-              isInvalid={Boolean(errors.is_mandatory)}
-            >
+            <FormControl mb={4} id="is_mandatory" isInvalid={Boolean(errors.is_mandatory)}>
               <FormLabel>Is Mandatory</FormLabel>
               <Switch
                 isChecked={is_mandatory}
                 size="sm"
-                {...register("is_mandatory", { required: false })}
+                {...register('is_mandatory', { required: false })}
               />
             </FormControl>
 
@@ -148,12 +119,12 @@ export default function EditVaccinePage() {
                   alt="vaccine"
                   className="profile-user-img img-fluid"
                   style={{
-                    cursor: "pointer",
-                    height: "auto",
-                    minHeight: "150px",
-                    width: "100%",
-                    border: "2px solid #ddd",
-                    objectFit: "cover",
+                    cursor: 'pointer',
+                    height: 'auto',
+                    minHeight: '150px',
+                    width: '100%',
+                    border: '2px solid #ddd',
+                    objectFit: 'cover',
                   }}
                   src={vaccine.image_link}
                 />

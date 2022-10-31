@@ -1,32 +1,28 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
-import { Box } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/button";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-} from "@chakra-ui/form-control";
-import { Input } from "@chakra-ui/input";
-import { Heading } from "@chakra-ui/layout";
-import { Text } from "@chakra-ui/layout";
-import { Flex } from "@chakra-ui/layout";
-import { Textarea } from "@chakra-ui/textarea";
+import { Box } from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/button';
+import { FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/form-control';
+import { Input } from '@chakra-ui/input';
+import { Heading } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import { Flex } from '@chakra-ui/layout';
+import { Textarea } from '@chakra-ui/textarea';
 
-import DashboardLayout from "../../components/DashboardLayout";
-import Card from "../../components/Card";
-import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { createVaccine } from "./VaccineSlice";
-import { VaccineForm, VaccineResponse } from "../../types/vaccine";
-import { checkFileSize, checkMimeType, maxSelectFile } from "../../utils/image";
-import { Switch } from "@chakra-ui/react";
+import DashboardLayout from '../../components/DashboardLayout';
+import Card from '../../components/Card';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { createVaccine } from './VaccineSlice';
+import { VaccineForm, VaccineResponse } from '../../types/vaccine';
+import { checkFileSize, checkMimeType, maxSelectFile } from '../../utils/image';
+import { Switch } from '@chakra-ui/react';
 
 export default function CreateVaccinePage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { creating, createError } = useAppSelector((state) => state.vaccine);
+  const { creating, createError } = useAppSelector(state => state.vaccine);
 
   const {
     handleSubmit,
@@ -35,15 +31,15 @@ export default function CreateVaccinePage() {
     formState: { errors },
   } = useForm<VaccineForm>();
 
-  const is_mandatory = watch("is_mandatory");
-  const userFiles = watch("userFiles");
+  const is_mandatory = watch('is_mandatory');
+  const userFiles = watch('userFiles');
   const file = userFiles && userFiles[0];
 
-  const onSubmit = handleSubmit((data) => {
-    dispatch(createVaccine(data)).then((data) => {
+  const onSubmit = handleSubmit(data => {
+    dispatch(createVaccine(data)).then(data => {
       let payload = data.payload as VaccineResponse;
       let requestStatus = data.meta.requestStatus as string;
-      if (requestStatus === "fulfilled") {
+      if (requestStatus === 'fulfilled') {
         let id = payload.vaccine.id;
         if (id) {
           navigate(`/vaccine/edit/${id}`);
@@ -55,11 +51,7 @@ export default function CreateVaccinePage() {
   const fileChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
-      if (
-        maxSelectFile(event) &&
-        checkMimeType(event) &&
-        checkFileSize(event)
-      ) {
+      if (maxSelectFile(event) && checkMimeType(event) && checkFileSize(event)) {
       }
     }
   };
@@ -72,69 +64,46 @@ export default function CreateVaccinePage() {
               Create Vaccine
             </Heading>
 
-            <FormControl
-              mb={4}
-              id="name"
-              isInvalid={Boolean(errors.description)}
-              isRequired
-            >
+            <FormControl mb={4} id="name" isInvalid={Boolean(errors.description)} isRequired>
               <FormLabel>Name</FormLabel>
               <Input
                 borderColor="gray.300"
                 placeholder="Name"
                 isInvalid={Boolean(errors.name)}
-                {...register("name", {
-                  required: "Please enter name.",
+                {...register('name', {
+                  required: 'Please enter name.',
                 })}
               />
-              {errors.name && (
-                <FormErrorMessage>
-                  {errors.name?.message as string}
-                </FormErrorMessage>
-              )}
+              {errors.name && <FormErrorMessage>{errors.name?.message as string}</FormErrorMessage>}
             </FormControl>
-            <FormControl
-              mb={4}
-              id="description"
-              isInvalid={Boolean(errors.description)}
-              isRequired
-            >
+            <FormControl mb={4} id="description" isInvalid={Boolean(errors.description)} isRequired>
               <FormLabel>Description</FormLabel>
               <Textarea
                 borderColor="gray.300"
                 size="sm"
                 placeholder="Description"
-                {...register("description", {
-                  required: "Please enter description.",
+                {...register('description', {
+                  required: 'Please enter description.',
                 })}
               />
             </FormControl>
-            <FormControl
-              mb={4}
-              id="no_of_does"
-              isInvalid={Boolean(errors.no_of_doses)}
-              isRequired
-            >
+            <FormControl mb={4} id="no_of_does" isInvalid={Boolean(errors.no_of_doses)} isRequired>
               <FormLabel>No of does</FormLabel>
               <Input
                 type="number"
                 borderColor="gray.300"
-                {...register("no_of_doses", {
-                  required: "Please enter no of does",
+                {...register('no_of_doses', {
+                  required: 'Please enter no of does',
                 })}
               />
             </FormControl>
 
-            <FormControl
-              mb={4}
-              id="is_mandatory"
-              isInvalid={Boolean(errors.is_mandatory)}
-            >
+            <FormControl mb={4} id="is_mandatory" isInvalid={Boolean(errors.is_mandatory)}>
               <FormLabel>Is Mandatory</FormLabel>
               <Switch
                 isChecked={is_mandatory}
                 size="sm"
-                {...register("is_mandatory", { required: false })}
+                {...register('is_mandatory', { required: false })}
               />
             </FormControl>
 
@@ -143,9 +112,9 @@ export default function CreateVaccinePage() {
             <Input
               borderColor="gray.300"
               type="file"
-              accept={"image/*"}
+              accept={'image/*'}
               id="userFiles"
-              {...register("userFiles", {
+              {...register('userFiles', {
                 required: false,
               })}
             />
@@ -168,7 +137,7 @@ export default function CreateVaccinePage() {
               borderColor="gray.200"
               borderRadius="8px"
               onClick={() => {
-                let element = document.getElementById("userFiles");
+                let element = document.getElementById('userFiles');
                 element && element.click();
               }}
             >
@@ -177,12 +146,12 @@ export default function CreateVaccinePage() {
                   alt="vaccine"
                   className="profile-user-img img-fluid"
                   style={{
-                    cursor: "pointer",
-                    height: "auto",
-                    minHeight: "150px",
-                    width: "100%",
-                    border: "2px solid #ddd",
-                    objectFit: "cover",
+                    cursor: 'pointer',
+                    height: 'auto',
+                    minHeight: '150px',
+                    width: '100%',
+                    border: '2px solid #ddd',
+                    objectFit: 'cover',
                   }}
                   src={URL.createObjectURL(file)}
                 />

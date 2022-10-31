@@ -1,6 +1,6 @@
-import React from "react";
-import { Box, Flex } from "@chakra-ui/layout";
-import Link from "./Link";
+import React from 'react';
+import { Box, Flex } from '@chakra-ui/layout';
+import Link from './Link';
 
 type NavItemData = {
   icon: any;
@@ -22,11 +22,11 @@ const NavItem = ({ icon, label, link, onClick }: NavItemData) => {
       mt={0}
       color="gray.700"
       _hover={{
-        backgroundColor: "gray.100",
+        backgroundColor: 'gray.100',
       }}
     >
       <Flex align="center">
-        {React.cloneElement(icon, { size: "24px" })}
+        {React.cloneElement(icon, { size: '24px' })}
         <Box ml={3} fontWeight="500">
           {label}
         </Box>

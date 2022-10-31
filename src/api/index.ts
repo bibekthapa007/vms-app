@@ -1,67 +1,61 @@
-import axios from "axios";
-import { SigninResponse, User } from "../types/auth";
-import { Vaccine } from "../types/vaccine";
+import axios from 'axios';
+import { SigninResponse, User } from '../types/auth';
+import { Vaccine } from '../types/vaccine';
 
 const authApi = axios.create({
   baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 const protectedApi = axios.create({
   baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
   headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
   },
 });
 
-export const signin = async (
-  email: string,
-  password: string
-): Promise<SigninResponse | null> => {
+export const signin = async (email: string, password: string): Promise<SigninResponse | null> => {
   try {
     const data = JSON.stringify({ email, password });
-    const response = await authApi.post("/auth/signin", data);
+    const response = await authApi.post('/auth/signin', data);
     if (response && response.status === 200) {
       const responseData = response.data;
       if (responseData) {
         return responseData;
       } else {
-        throw new Error(response.data.message || "Login failed");
+        throw new Error(response.data.message || 'Login failed');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Login failed");
+    throw new Error(error.message || 'Login failed');
   }
 };
 
-export const signup = async (
-  email: string,
-  password: string
-): Promise<SigninResponse | null> => {
+export const signup = async (email: string, password: string): Promise<SigninResponse | null> => {
   try {
     const data = JSON.stringify({ email, password });
-    const response = await authApi.post("/auth/signup", data);
+    const response = await authApi.post('/auth/signup', data);
     if (response && response.status === 200) {
       const responseData = response.data;
       if (responseData) {
         return responseData;
       } else {
-        throw new Error(response.data.message || "Signup failed");
+        throw new Error(response.data.message || 'Signup failed');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Signup failed");
+    throw new Error(error.message || 'Signup failed');
   }
 };
 
 export const getUserData = async (): Promise<User | null> => {
   try {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     const response = await authApi.get(`/auth/check`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -72,12 +66,12 @@ export const getUserData = async (): Promise<User | null> => {
       if (responseData) {
         return responseData.user;
       } else {
-        throw new Error(response.data.message || "Failed to fetch user data");
+        throw new Error(response.data.message || 'Failed to fetch user data');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to fetch user data");
+    throw new Error(error.message || 'Failed to fetch user data');
   }
 };
 
@@ -89,17 +83,17 @@ export const getVaccines = async (): Promise<Vaccine[] | null> => {
     }
     const responseData = response.data;
     if (!responseData) {
-      throw new Error(response.data.message || "Failed to fetch vaccines");
+      throw new Error(response.data.message || 'Failed to fetch vaccines');
     }
     return responseData.vaccines;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to fetch vaccines");
+    throw new Error(error.message || 'Failed to fetch vaccines');
   }
 };
 
 export const getVaccine = async (id: string): Promise<Vaccine | null> => {
   try {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     const response = await authApi.get(`/vaccine`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -110,20 +104,18 @@ export const getVaccine = async (id: string): Promise<Vaccine | null> => {
       if (responseData) {
         return responseData.user;
       } else {
-        throw new Error(response.data.message || "Failed to fetch vaccines");
+        throw new Error(response.data.message || 'Failed to fetch vaccines');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to fetch vaccines");
+    throw new Error(error.message || 'Failed to fetch vaccines');
   }
 };
 
-export const createVaccine = async (
-  vaccine: Vaccine
-): Promise<Vaccine | null> => {
+export const createVaccine = async (vaccine: Vaccine): Promise<Vaccine | null> => {
   try {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     const response = await authApi.get(`/vaccine`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -134,20 +126,18 @@ export const createVaccine = async (
       if (responseData) {
         return responseData.user;
       } else {
-        throw new Error(response.data.message || "Failed to fetch vaccines");
+        throw new Error(response.data.message || 'Failed to fetch vaccines');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to fetch vaccines");
+    throw new Error(error.message || 'Failed to fetch vaccines');
   }
 };
 
-export const updateVaccine = async (
-  vaccine: Vaccine
-): Promise<Vaccine | null> => {
+export const updateVaccine = async (vaccine: Vaccine): Promise<Vaccine | null> => {
   try {
-    const token = localStorage.getItem("token") || "";
+    const token = localStorage.getItem('token') || '';
     const response = await authApi.get(`/vaccine`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -158,12 +148,12 @@ export const updateVaccine = async (
       if (responseData) {
         return responseData.user;
       } else {
-        throw new Error(response.data.message || "Failed to fetch vaccines");
+        throw new Error(response.data.message || 'Failed to fetch vaccines');
       }
     }
     return null;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to fetch vaccines");
+    throw new Error(error.message || 'Failed to fetch vaccines');
   }
 };
 
@@ -175,11 +165,11 @@ export const deleteVaccine = async (vaccine_id: number): Promise<number> => {
       if (responseData) {
         return vaccine_id;
       } else {
-        throw new Error(response.data.message || "Failed to delete vaccine");
+        throw new Error(response.data.message || 'Failed to delete vaccine');
       }
     }
     return vaccine_id;
   } catch (error: Error | any) {
-    throw new Error(error.message || "Failed to delete vaccine");
+    throw new Error(error.message || 'Failed to delete vaccine');
   }
 };

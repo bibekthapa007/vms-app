@@ -1,6 +1,6 @@
-import React from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { Link as ChackraLink } from "@chakra-ui/react";
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link as ChackraLink } from '@chakra-ui/react';
 
 const Link = ({
   children,
@@ -17,7 +17,7 @@ const Link = ({
 }: any) => {
   chackraProps._hover = {
     ...chackraProps._hover,
-    textDecoration: decoration || "none",
+    textDecoration: decoration || 'none',
   };
   return (
     <RouterLink

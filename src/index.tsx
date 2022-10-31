@@ -1,18 +1,16 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import store from "./store/store";
-import ErrorBoundary from "./components/ErrorBoundary";
-import "./index.css";
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import store from './store/store';
+import ErrorBoundary from './components/ErrorBoundary';
+import './index.css';
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <ErrorBoundary>
@@ -24,7 +22,7 @@ root.render(
         </Provider>
       </ChakraProvider>
     </ErrorBoundary>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
